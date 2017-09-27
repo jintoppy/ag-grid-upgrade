@@ -12,7 +12,7 @@ class Checkbox extends Component {
     render(){
        return (
            <div>
-               <input type="checkbox" onChange={this.props.onClick} />
+               <input type="checkbox" checked={this.props.value} onChange={this.props.onClick} />
            </div>
        ) 
     }

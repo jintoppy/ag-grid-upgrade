@@ -38,6 +38,7 @@ export default class extends Component {
             height: 115,
             width: 500
         };
+        let data = this.props.data;
 
         console.log(this.props.data);
 
@@ -48,8 +49,9 @@ export default class extends Component {
                 <AgGridReact
                     // properties
                     columnDefs={this.state.columnDefs}
-                    rowData={this.props.data}
-
+                    rowData={data}
+                    deltaRowDataMode
+                    getRowNodeId={(data) => data.price}
                     // events
                     onGridReady={this.onGridReady}>
                 </AgGridReact>

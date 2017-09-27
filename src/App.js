@@ -16,10 +16,11 @@ class App extends Component {
 }
 
 onselect(){
-  let data = {
-    ...this.state.rowData
-  };
-  data[0].price = data[0].price +1;
+  let data = [];
+  this.state.rowData.forEach(item => {
+    data.push(item);
+  });
+  data.push({make: "Toyota", checked: true, model: "Celica", price: 35000+Math.random()});
   this.setState({
     rowData: data
   })
