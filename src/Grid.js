@@ -1,14 +1,10 @@
 import React, {Component} from "react";
 import {AgGridReact} from "ag-grid-react";
-import Checkbox from './Checkbox';
 
 export default class extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            columnDefs: this.createColumnDefs(props)            
-        }
     }
 
     onGridReady(params) {
@@ -18,24 +14,23 @@ export default class extends Component {
         this.gridApi.sizeColumnsToFit();
     }
 
-    createColumnDefs(props) {
-        return [
-            {
-                field: 'checked',
-                cellRendererFramework: Checkbox,
-                cellRendererParams: {
-                    onClick: props.onselect.bind(this)
-                }
-            },
-            {headerName: "Make", field: "make"},
-            {headerName: "Model", field: "model"},
-            {headerName: "Price", field: "price"}
-        ];
-    }
+    // headerName: 'Workflow Transition Timestamp',
+    // field: 'WorkflowLastModifiedTime',
+    // colId: 'Workflow.LastModifiedTime',
+    
+    // width: scorecardConstants.SELECT_COLUMN_DEFAULT_WIDTH,
+    // minWidth: scorecardConstants.SELECT_COLUMN_DEFAULT_WIDTH,
+    // headerComponentFramework: GridHeaderContainer,
+    // headerComponentParams: {
+    // columnData: [],
+    // facetedColumnValuesUrl,
+    // persistSort,
+    // persistFilters
+    // }    
 
     render() {
         let containerStyle = {
-            height: 115,
+            height: 500,
             width: 500
         };
         let data = this.props.data;
@@ -45,13 +40,15 @@ export default class extends Component {
         return (
             <div style={containerStyle} className="ag-fresh">
                 <h1>Simple ag-Grid React Example</h1>
-                {JSON.stringify(this.props.data[0])}
                 <AgGridReact
                     // properties
-                    columnDefs={this.state.columnDefs}
-                    rowData={data}
+                    enableColResize
+                    suppressMovableColumns={false}
+                    columnDefs={this.props.cols}
+                    rowData={data.asMutable({deep: true})}
+                    paginationPageSize={100}
                     deltaRowDataMode
-                    getRowNodeId={(data) => data.price}
+                    getRowNodeId={(data) => data.id}
                     // events
                     onGridReady={this.onGridReady}>
                 </AgGridReact>

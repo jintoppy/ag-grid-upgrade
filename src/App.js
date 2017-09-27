@@ -1,39 +1,67 @@
 import React, { Component } from 'react';
+import {connect} from "react-redux";
+import Checkbox from './Checkbox';
 import Grid from './Grid';
 import logo from './logo.svg';
+import * as actions from './actions';
 import './App.css';
 import "ag-grid/dist/styles/ag-grid.css";
 import "ag-grid/dist/styles/theme-fresh.css";
+
+const mapStateToProps = (state) => {
+  return {
+    data: state.data
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    updateRowData: () => {
+      dispatch(actions.updateRowData());
+    }
+  };
+};
 
 class App extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-        rowData: this.createRowData()
-    }
     this.onselect = this.onselect.bind(this);
 }
 
-onselect(){
-  let data = [];
-  this.state.rowData.forEach(item => {
-    data.push(item);
-  });
-  data.push({make: "Toyota", checked: true, model: "Celica", price: 35000+Math.random()});
-  this.setState({
-    rowData: data
-  })
+createColumnDefs() {
+  return [
+      {
+          field: 'checked',
+          cellRendererFramework: Checkbox,
+          cellRendererParams: {
+              onClick: this.onselect.bind(this)
+          },
+          pinned: 'left'
+      },
+      {
+          headerName: "Make", 
+          field: "make",
+          suppressResize: true,
+          suppressFilter: true,
+          suppressSorting: true,
+          suppressToolPanel: true,
+          cellRenderer: function(params){
+              return `data is ${params.data}`;
+          },
+          width: 100
+      },
+      {headerName: "Model", field: "model"},
+      {headerName: "Price", field: "price"}
+  ];
 }
 
-createRowData() {
-    return [
-        {make: "Toyota", model: "Celica", price: 35000},
-        {make: "Ford", model: "Mondeo", price: 32000},
-        {make: "Porsche", model: "Boxter", price: 72000}
-    ];
+onselect(){
+  this.props.updateRowData();
 }
-  render() {
+
+render() {
+    const cols = this.createColumnDefs();
     return (
       <div className="App">
         <div className="App-header">
@@ -41,11 +69,12 @@ createRowData() {
           <h2>Welcome to React</h2>
         </div>
         <Grid 
+          cols={cols}
           onselect={this.onselect}
-          data={this.state.rowData} />
+          data={this.props.data} />
       </div>
     );
   }
 }
 
-export default App;
+export default connect(mapStateToProps, mapDispatchToProps)(App);
